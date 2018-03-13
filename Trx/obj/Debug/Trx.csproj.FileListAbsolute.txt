@@ -1,0 +1,24 @@
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\bin\Debug\Trx.exe.config
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\bin\Debug\Trx.exe
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\bin\Debug\Trx.pdb
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\obj\Debug\Trx.csprojResolveAssemblyReference.cache
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\obj\Debug\Trx.Form1.resources
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\obj\Debug\Trx.Properties.Resources.resources
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\obj\Debug\Trx.csproj.GenerateResource.Cache
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\obj\Debug\Trx.csproj.CoreCompileInputs.cache
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\obj\Debug\Trx.exe
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\obj\Debug\Trx.pdb
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\bin\Debug\Database.mdf
+C:\Users\Vladislav\Documents\Visual Studio 2017\Projects\Trx\Trx\bin\Debug\Database_log.ldf
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Debug\Database.mdf
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Debug\Database_log.ldf
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Debug\Trx.exe.config
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Debug\Trx.exe
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Debug\Trx.pdb
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Trx.csprojResolveAssemblyReference.cache
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Trx.Form1.resources
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Trx.Properties.Resources.resources
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Trx.csproj.GenerateResource.Cache
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Trx.csproj.CoreCompileInputs.cache
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Trx.exe
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Trx.pdb

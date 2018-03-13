@@ -1,0 +1,14 @@
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Release\Database.mdf
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Release\Database_log.ldf
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Release\Trx.exe.config
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Release\Trx.exe
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Release\Trx.pdb
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Release\AForge.Video.DirectShow.dll
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Release\AForge.Video.dll
+C:\Users\Vladislav\source\repos\Trx\Trx\bin\Release\zxing.dll
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.Form1.resources
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.Properties.Resources.resources
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.csproj.GenerateResource.Cache
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.csproj.CoreCompileInputs.cache
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.exe
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.pdb
