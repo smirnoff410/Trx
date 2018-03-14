@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using AForge.Video;
 using AForge.Video.DirectShow;
 using System.Data.SqlClient;
+using Trx.Model;
 
 namespace Trx
 {
@@ -61,10 +62,6 @@ namespace Trx
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
-            stringConnection = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Vladislav\source\repos\Trx\Trx\Database.mdf;Integrated Security=True";
-
-            sqlConnection = new SqlConnection(stringConnection);
-
             videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
 
             reader = new ZXing.BarcodeReader();
@@ -97,57 +94,43 @@ namespace Trx
             ZXing.Result result = reader.Decode((Bitmap)e.Frame.Clone());
             if(result != null)
             {
-                MessageBox.Show(
-                    "Пользователь найден",
-                    "Пользователь найден",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information,
-                    MessageBoxDefaultButton.Button1,
-                    MessageBoxOptions.DefaultDesktopOnly);
                 SetResult(result.Text);
 
-                sqlConnection = new SqlConnection(stringConnection);
-                try
+                SqlQuery sqlQuery = new SqlQuery();
+                //Запрос получения пользователя по считанному Id
+                List<UserModel> userModel = new List<UserModel>();
+                userModel = sqlQuery.SelectAllFromUserWhereUserId(userId);
+                if(userModel.Count > 0)
                 {
-                    sqlConnection.Open();
-                }
-                catch (Exception ex)
-                {
+                    MessageBox.Show(
+                        "Пользователь найден",
+                        "Ура!!!",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
+                    
+                    SetTextBox(textBox1, userModel[0].first_name);
+                    SetTextBox(textBox2, userModel[0].second_name);
+                    SetTextBox(textBox3, userModel[0].last_name);
 
-                }
-                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [User] WHERE Id = " + userId, sqlConnection);
-                using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
-                {
-                    while (dr.Read())
+                    //Запрос получения приобретённых пакетов пользователем
+                    List<string> traineType = new List<string>();
+                    traineType = sqlQuery.SelectTraineTypeFromUserTraineWhereUserId(userId);
+                    for (int i = 0; i < traineType.Count; i++)
                     {
-                        SetTextBox(textBox1, dr.GetValue(1).ToString().Trim());
-                        SetTextBox(textBox2, dr.GetValue(2).ToString().Trim());
-                        SetTextBox(textBox3, dr.GetValue(3).ToString().Trim());
+                        SetComboBox(cbTraine, traineType[i]);
                     }
-                }
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-
-                sqlConnection = new SqlConnection(stringConnection);
-                try
+                } else
                 {
-                    sqlConnection.Open();
+                    MessageBox.Show(
+                        "Пользователь не найден",
+                        "Упс...",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error,
+                        MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
                 }
-                catch (Exception ex)
-                {
-
-                }
-
-                SqlCommand sqlCommand1 = new SqlCommand("SELECT * FROM [UserTraine] WHERE id_user = " + userId, sqlConnection);
-                using (SqlDataReader dr = sqlCommand1.ExecuteReader(CommandBehavior.CloseConnection))
-                {
-                    while (dr.Read())
-                    {
-                        SetComboBox(cbTraine, dr.GetValue(2).ToString().Trim());
-                    }
-                }
-                sqlConnection.Close();
-                sqlConnection.Dispose();
 
                 if (videoSource != null)
                 {
@@ -168,27 +151,12 @@ namespace Trx
         private void cbTraine_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedState = cbTraine.SelectedItem.ToString();
-            sqlConnection = new SqlConnection(stringConnection);
-            try
-            {
-                sqlConnection.Open();
-            }
-            catch (Exception ex)
-            {
 
-            }
-
-            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [UserTraine] WHERE id_user = " + userId + " AND traine_type = N'" + selectedState + "'", sqlConnection);
-            using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
-            {
-                while (dr.Read())
-                {
-                    SetTextBox(textBox5, dr.GetValue(4).ToString().Trim());
-                    SetTextBox(textBox4, dr.GetValue(5).ToString().Trim());
-                }
-            }
-            sqlConnection.Close();
-            sqlConnection.Dispose();
+            SqlQuery sqlQuery = new SqlQuery();
+            List<UserTraineModel> userTraineModel = new List<UserTraineModel>();
+            userTraineModel = sqlQuery.SelectAllFromUserTraineWhereUserIdAndTraineType(userId, selectedState);
+            SetTextBox(textBox5, userTraineModel[0].count_traine.ToString());
+            SetTextBox(textBox4, userTraineModel[0].date_start);
         }
 
         private void decTraine_Click(object sender, EventArgs e)
@@ -202,22 +170,9 @@ namespace Trx
                 MessageBoxOptions.DefaultDesktopOnly);
             if(result == DialogResult.Yes)
             {
-                sqlConnection = new SqlConnection(stringConnection);
-                try
-                {
-                    sqlConnection.Open();
-                }
-                catch (Exception ex)
-                {
-
-                }
-
-                int dec = Convert.ToInt32(textBox5.Text) - 1;
-                SqlCommand sqlCommand = new SqlCommand("UPDATE [UserTraine] SET count_traine = " + dec + " WHERE id_user = " + userId + " AND traine_type = N'" + cbTraine.SelectedItem.ToString() + "'", sqlConnection);
-                int rowCount = sqlCommand.ExecuteNonQuery();
-                textBox5.Text = dec.ToString();
-                sqlConnection.Close();
-                sqlConnection.Dispose();
+                //Уменьшение количества занятий на 1
+                SqlQuery sqlQuery = new SqlQuery();
+                textBox5.Text = sqlQuery.UpdateUserTraineSetCountTraineWhereUserIdAndTraineType(userId, cbTraine.SelectedItem.ToString(), Convert.ToInt32(textBox5.Text)).ToString();
             }
         }
     }
