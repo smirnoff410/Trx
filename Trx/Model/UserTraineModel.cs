@@ -11,8 +11,8 @@ namespace Trx.Model
         public int Id { get; set; }
         public int id_user { get; set; }
         public string traine_type { get; set; }
-        public int id_worker { get; set; }
+        public string worker_name { get; set; }
         public int count_traine { get; set; }
-        public string date_start { get; set; }
+        public DateTime date_start { get; set; }
     }
 }

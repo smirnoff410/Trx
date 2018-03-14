@@ -95,9 +95,9 @@ namespace Trx
                         Id = Convert.ToInt32(dr.GetValue(0)),
                         id_user = Convert.ToInt32(dr.GetValue(1)),
                         traine_type = dr.GetValue(2).ToString().Trim(),
-                        id_worker = Convert.ToInt32(dr.GetValue(3)),
+                        worker_name = dr.GetValue(3).ToString().Trim(),
                         count_traine = Convert.ToInt32(dr.GetValue(4)),
-                        date_start = dr.GetValue(5).ToString().Trim()
+                        date_start = Convert.ToDateTime(dr.GetValue(5).ToString().Trim())
                     };
                     userTraineModel.Add(userTraine);
                 }
@@ -105,6 +105,74 @@ namespace Trx
             sqlConnection.Close();
             sqlConnection.Dispose();
             return userTraineModel;
+        }
+
+        public List<TraineModel> SelectAllFromTraine()
+        {
+            List<TraineModel> traineModel = new List<TraineModel>();
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [Traine]", sqlConnection);
+            using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
+            {
+                while (dr.Read())
+                {
+                    TraineModel traine = new TraineModel
+                    {
+                        Id = Convert.ToInt32(dr.GetValue(0)),
+                        type = dr.GetValue(1).ToString().Trim(),
+                        price = Convert.ToInt32(dr.GetValue(2).ToString().Trim())
+                    };
+                    traineModel.Add(traine);
+                }
+            }
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return traineModel;
+        }
+
+        public List<WorkerModel> SelectAllFromWorker()
+        {
+            List<WorkerModel> workerModel = new List<WorkerModel>();
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [Worker]", sqlConnection);
+            using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
+            {
+                while (dr.Read())
+                {
+                    WorkerModel worker = new WorkerModel
+                    {
+                        Id = Convert.ToInt32(dr.GetValue(0)),
+                        first_name = dr.GetValue(1).ToString().Trim(),
+                        second_name = dr.GetValue(2).ToString().Trim(),
+                        last_name = dr.GetValue(3).ToString().Trim(),
+                        login = dr.GetValue(4).ToString().Trim(),
+                        password = dr.GetValue(5).ToString().Trim(),
+                        id_role = Convert.ToInt32(dr.GetValue(6).ToString().Trim())
+                    };
+                    workerModel.Add(worker);
+                }
+            }
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return workerModel;
         }
 
         public int UpdateUserTraineSetCountTraineWhereUserIdAndTraineType(string userId, string traine_type, int dec)
@@ -124,6 +192,68 @@ namespace Trx
             sqlConnection.Close();
             sqlConnection.Dispose();
             return dec;
+        }
+
+        public int InsertIntoUser(UserModel user)
+        {
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            SqlCommand sqlCommand = new SqlCommand("INSERT INTO [User] VALUES(" + user.Id + ", N'" + user.first_name + "', N'" + user.second_name + "', N'" + user.last_name + "')", sqlConnection);
+            int rowCount = sqlCommand.ExecuteNonQuery();
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return rowCount;
+        }
+
+        public int InsertIntoUserTraine(UserTraineModel userTraineModel)
+        {
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            SqlCommand sqlCommand = new SqlCommand("INSERT INTO [UserTraine] (Id, id_user, traine_type, worker_name, count_traine) VALUES(" + userTraineModel.Id + ", " + userTraineModel.id_user + ", N'" + userTraineModel.traine_type + "',N' " + userTraineModel.worker_name + "', " + userTraineModel.count_traine + ")", sqlConnection);
+            int rowCount = sqlCommand.ExecuteNonQuery();
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return rowCount;
+        }
+
+        public int SelectMaxIdFromUserTraine()
+        {
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            int max = 0;
+            SqlCommand sqlCommand = new SqlCommand("SELECT MAX(Id) FROM [UserTraine]", sqlConnection);
+            using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
+            {
+                while (dr.Read())
+                {
+                    max = Convert.ToInt32(dr.GetValue(0));
+                }
+            }
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return max;
         }
     }
 }
