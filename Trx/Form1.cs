@@ -11,6 +11,7 @@ using AForge.Video;
 using AForge.Video.DirectShow;
 using System.Data.SqlClient;
 using Trx.Model;
+using System.Text.RegularExpressions;
 
 namespace Trx
 {
@@ -63,7 +64,7 @@ namespace Trx
             if (!InvokeRequired)
             {
                 comboBox.Items.Add(v);
-                comboBox.SelectedText = "---";
+                //comboBox.SelectedText = "---";
             }
             else
                 Invoke(new SetComboBoxDelegate(SetComboBox), new object[] { comboBox, v });
@@ -72,6 +73,8 @@ namespace Trx
         private void Form1_Load_1(object sender, EventArgs e)
         {
             btnAdd.Enabled = false;
+
+            EnabledWidget(false);
 
             videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
 
@@ -143,8 +146,8 @@ namespace Trx
                         MessageBoxOptions.DefaultDesktopOnly);
                     if(dialogResult == DialogResult.Yes)
                     {
-                        btnAdd.Enabled = true;
-                        label14.Text = DateTime.Today.ToString();
+                        this.Invoke(new EventHandler(delegate { btnAdd.Enabled = true; }));
+                        EnabledWidget(true);
                         List<TraineModel> traine = new List<TraineModel>();
                         traine = sqlQuery.SelectAllFromTraine();
                         for (int i = 0; i < traine.Count; i++)
@@ -185,7 +188,9 @@ namespace Trx
             List<UserTraineModel> userTraineModel = new List<UserTraineModel>();
             userTraineModel = sqlQuery.SelectAllFromUserTraineWhereUserIdAndTraineType(userId, selectedState);
             SetLabel(label10, userTraineModel[0].count_traine.ToString());
-            SetLabel(label11, userTraineModel[0].date_start.ToString());
+            SetLabel(label11, ConvertFromUnixTimestamp(Convert.ToDouble(userTraineModel[0].date_start)).ToString());
+            SetLabel(label16, ConvertFromUnixTimestamp(Convert.ToDouble(userTraineModel[0].date_finish)).ToString());
+            SetLabel(label13, userTraineModel[0].worker_name);
         }
 
         private void decTraine_Click(object sender, EventArgs e)
@@ -218,13 +223,22 @@ namespace Trx
             SqlQuery sqlQuery = new SqlQuery();
             int result = sqlQuery.InsertIntoUser(user);
             int maxUserTraine = sqlQuery.SelectMaxIdFromUserTraine();
+            double date_finish;
+            if(SearchRegex(cbTraine2.SelectedItem.ToString(), "разовая"))
+                date_finish = ConvertToUnixTimestamp(DateTime.Today) + 86400;
+            else if(SearchRegex(cbTraine2.SelectedItem.ToString(), "2 недели"))
+                date_finish = ConvertToUnixTimestamp(DateTime.Today) + 1209600;
+            else
+                date_finish = ConvertToUnixTimestamp(DateTime.Today) + 2629743;
             UserTraineModel userTraineModel = new UserTraineModel
             {
                 Id = ++maxUserTraine,
                 id_user = Convert.ToInt32(userId),
                 traine_type = cbTraine2.SelectedItem.ToString(),
                 count_traine = Convert.ToInt32(textBox4.Text),
-                worker_name = cbWorker.SelectedItem.ToString()
+                worker_name = cbWorker.SelectedItem.ToString(),
+                date_start = Convert.ToDecimal(ConvertToUnixTimestamp(DateTime.Today)),
+                date_finish = Convert.ToDecimal(date_finish)
             };
             int result1 = sqlQuery.InsertIntoUserTraine(userTraineModel);
             if (result == 1 && result1 == 1)
@@ -236,6 +250,8 @@ namespace Trx
                 MessageBoxIcon.Information,
                 MessageBoxDefaultButton.Button1,
                 MessageBoxOptions.DefaultDesktopOnly);
+
+                EnabledWidget(false);
             }
             else
             {
@@ -246,6 +262,81 @@ namespace Trx
                 MessageBoxIcon.Error,
                 MessageBoxDefaultButton.Button1,
                 MessageBoxOptions.DefaultDesktopOnly);
+            }
+        }
+
+        private void EnabledWidget(bool flag)
+        {
+            if (flag)
+            {
+                this.Invoke(new EventHandler(delegate { textBox1.Enabled = true; }));
+                this.Invoke(new EventHandler(delegate { textBox2.Enabled = true; }));
+                this.Invoke(new EventHandler(delegate { textBox3.Enabled = true; }));
+                this.Invoke(new EventHandler(delegate { textBox4.Enabled = true; }));
+                this.Invoke(new EventHandler(delegate { label14.Text = DateTime.Today.ToString(); }));
+                this.Invoke(new EventHandler(delegate { cbTraine2.Enabled = true; }));
+                this.Invoke(new EventHandler(delegate { cbWorker.Enabled = true; }));
+
+                this.Invoke(new EventHandler(delegate { cbTraine2.SelectedIndex = -1; }));
+                this.Invoke(new EventHandler(delegate { cbWorker.SelectedIndex = -1; }));
+            }
+            else
+            {
+                this.Invoke(new EventHandler(delegate { textBox1.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox2.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox3.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox4.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { label14.Text = ""; }));
+                this.Invoke(new EventHandler(delegate { label17.Text = ""; }));
+                this.Invoke(new EventHandler(delegate { cbTraine2.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { cbWorker.Enabled = false; }));
+
+                textBox1.Text = "";
+                textBox2.Text = "";
+                textBox3.Text = "";
+                textBox4.Text = "";
+                this.Invoke(new EventHandler(delegate { cbTraine2.SelectedIndex = -1; }));
+                this.Invoke(new EventHandler(delegate { cbWorker.SelectedIndex = -1; }));
+                cbTraine2.Items.Clear();
+                cbWorker.Items.Clear();
+            }
+        }
+
+        static double ConvertToUnixTimestamp(DateTime date)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            TimeSpan diff = date - origin;
+            return Math.Floor(diff.TotalSeconds);
+        }
+
+        static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return origin.AddSeconds(timestamp);
+        }
+
+        private bool SearchRegex(string str, string substr)
+        {
+            Regex regex1 = new Regex(@substr);
+            MatchCollection matches = regex1.Matches(str);
+            if (matches.Count > 0)
+                return true;
+            else
+                return false;
+        }
+
+        private void cbTraine2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            double date_finish;
+            if(cbTraine2.SelectedItem != null)
+            {
+                if (SearchRegex(cbTraine2.SelectedItem.ToString(), "разовая"))
+                    date_finish = ConvertToUnixTimestamp(DateTime.Today) + 86400;
+                else if (SearchRegex(cbTraine2.SelectedItem.ToString(), "2 недели"))
+                    date_finish = ConvertToUnixTimestamp(DateTime.Today) + 1209600;
+                else
+                    date_finish = ConvertToUnixTimestamp(DateTime.Today) + 2629743;
+                label17.Text = ConvertFromUnixTimestamp(date_finish).ToString();
             }
         }
     }

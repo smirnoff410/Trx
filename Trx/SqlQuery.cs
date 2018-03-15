@@ -97,7 +97,8 @@ namespace Trx
                         traine_type = dr.GetValue(2).ToString().Trim(),
                         worker_name = dr.GetValue(3).ToString().Trim(),
                         count_traine = Convert.ToInt32(dr.GetValue(4)),
-                        date_start = Convert.ToDateTime(dr.GetValue(5).ToString().Trim())
+                        date_start = Convert.ToDecimal(dr.GetValue(5).ToString().Trim()),
+                        date_finish = Convert.ToDecimal(dr.GetValue(6).ToString().Trim())
                     };
                     userTraineModel.Add(userTraine);
                 }
@@ -224,7 +225,7 @@ namespace Trx
 
             }
 
-            SqlCommand sqlCommand = new SqlCommand("INSERT INTO [UserTraine] (Id, id_user, traine_type, worker_name, count_traine) VALUES(" + userTraineModel.Id + ", " + userTraineModel.id_user + ", N'" + userTraineModel.traine_type + "',N' " + userTraineModel.worker_name + "', " + userTraineModel.count_traine + ")", sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand("INSERT INTO [UserTraine] VALUES(" + userTraineModel.Id + ", " + userTraineModel.id_user + ", N'" + userTraineModel.traine_type + "',N' " + userTraineModel.worker_name + "', " + userTraineModel.count_traine + ", " + userTraineModel.date_start + ", " + userTraineModel.date_finish + ")", sqlConnection);
             int rowCount = sqlCommand.ExecuteNonQuery();
             sqlConnection.Close();
             sqlConnection.Dispose();

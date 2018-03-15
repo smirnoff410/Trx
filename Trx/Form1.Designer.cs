@@ -28,11 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pbWebCamPreview = new System.Windows.Forms.PictureBox();
             this.btnStart = new System.Windows.Forms.Button();
             this.lbCams = new System.Windows.Forms.ListBox();
             this.decTraine = new System.Windows.Forms.Button();
             this.gbUserData = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.cbTraine2 = new System.Windows.Forms.ComboBox();
+            this.cbWorker = new System.Windows.Forms.ComboBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.btnAdd = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -56,15 +62,21 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.cbWorker = new System.Windows.Forms.ComboBox();
-            this.cbTraine2 = new System.Windows.Forms.ComboBox();
-            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.сохранитьКакToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.сохранитьКакToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pbWebCamPreview)).BeginInit();
             this.gbUserData.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pbWebCamPreview
@@ -105,6 +117,9 @@
             // 
             // gbUserData
             // 
+            this.gbUserData.Controls.Add(this.label17);
+            this.gbUserData.Controls.Add(this.label16);
+            this.gbUserData.Controls.Add(this.label15);
             this.gbUserData.Controls.Add(this.label14);
             this.gbUserData.Controls.Add(this.cbTraine2);
             this.gbUserData.Controls.Add(this.cbWorker);
@@ -133,6 +148,48 @@
             this.gbUserData.TabIndex = 5;
             this.gbUserData.TabStop = false;
             this.gbUserData.Text = "Данные";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(248, 127);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(0, 13);
+            this.label14.TabIndex = 25;
+            // 
+            // cbTraine2
+            // 
+            this.cbTraine2.FormattingEnabled = true;
+            this.cbTraine2.Location = new System.Drawing.Point(248, 67);
+            this.cbTraine2.Name = "cbTraine2";
+            this.cbTraine2.Size = new System.Drawing.Size(100, 21);
+            this.cbTraine2.TabIndex = 24;
+            this.cbTraine2.SelectedIndexChanged += new System.EventHandler(this.cbTraine2_SelectedIndexChanged);
+            // 
+            // cbWorker
+            // 
+            this.cbWorker.FormattingEnabled = true;
+            this.cbWorker.Location = new System.Drawing.Point(248, 85);
+            this.cbWorker.Name = "cbWorker";
+            this.cbWorker.Size = new System.Drawing.Size(100, 21);
+            this.cbWorker.TabIndex = 23;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(139, 91);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(0, 13);
+            this.label13.TabIndex = 22;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(8, 91);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(44, 13);
+            this.label12.TabIndex = 21;
+            this.label12.Text = "Тренер";
             // 
             // btnAdd
             // 
@@ -282,7 +339,7 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Location = new System.Drawing.Point(2, 12);
+            this.tabControl1.Location = new System.Drawing.Point(4, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(761, 308);
@@ -343,53 +400,81 @@
             this.tabPage5.Text = "Сотрудника";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // label12
+            // label15
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(8, 91);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(44, 13);
-            this.label12.TabIndex = 21;
-            this.label12.Text = "Тренер";
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(10, 144);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(89, 13);
+            this.label15.TabIndex = 26;
+            this.label15.Text = "Дата окончания";
             // 
-            // label13
+            // label16
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(139, 91);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(0, 13);
-            this.label13.TabIndex = 22;
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(139, 144);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(0, 13);
+            this.label16.TabIndex = 27;
             // 
-            // cbWorker
+            // label17
             // 
-            this.cbWorker.FormattingEnabled = true;
-            this.cbWorker.Location = new System.Drawing.Point(248, 85);
-            this.cbWorker.Name = "cbWorker";
-            this.cbWorker.Size = new System.Drawing.Size(100, 21);
-            this.cbWorker.TabIndex = 23;
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(248, 144);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(0, 13);
+            this.label17.TabIndex = 28;
             // 
-            // cbTraine2
+            // contextMenuStrip1
             // 
-            this.cbTraine2.FormattingEnabled = true;
-            this.cbTraine2.Location = new System.Drawing.Point(248, 67);
-            this.cbTraine2.Name = "cbTraine2";
-            this.cbTraine2.Size = new System.Drawing.Size(100, 21);
-            this.cbTraine2.TabIndex = 24;
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // label14
+            // contextMenuStrip2
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(248, 127);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(0, 13);
-            this.label14.TabIndex = 25;
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.сохранитьКакToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(154, 26);
+            // 
+            // сохранитьКакToolStripMenuItem
+            // 
+            this.сохранитьКакToolStripMenuItem.Name = "сохранитьКакToolStripMenuItem";
+            this.сохранитьКакToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.сохранитьКакToolStripMenuItem.Text = "Сохранить как";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.файлToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(765, 24);
+            this.menuStrip1.TabIndex = 9;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // файлToolStripMenuItem
+            // 
+            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.сохранитьКакToolStripMenuItem1});
+            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.файлToolStripMenuItem.Text = "Файл";
+            // 
+            // сохранитьКакToolStripMenuItem1
+            // 
+            this.сохранитьКакToolStripMenuItem1.Name = "сохранитьКакToolStripMenuItem1";
+            this.сохранитьКакToolStripMenuItem1.Size = new System.Drawing.Size(153, 22);
+            this.сохранитьКакToolStripMenuItem1.Text = "Сохранить как";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(765, 332);
+            this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.tabControl1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -399,7 +484,11 @@
             this.gbUserData.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -438,6 +527,15 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem сохранитьКакToolStripMenuItem;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem сохранитьКакToolStripMenuItem1;
     }
 }
 
