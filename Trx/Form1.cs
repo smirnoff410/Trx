@@ -116,6 +116,12 @@ namespace Trx
                 userModel = sqlQuery.SelectAllFromUserWhereUserId(userId);
                 if(userModel.Count > 0)
                 {
+                    this.Invoke(new EventHandler(delegate { cbTraine.SelectedIndex = -1; }));
+                    this.Invoke(new EventHandler(delegate { cbTraine.Items.Clear(); }));
+                    label10.Text = "";
+                    label11.Text = "";
+                    label16.Text = "";
+                    label13.Text = "";
                     MessageBox.Show(
                         "Пользователь найден",
                         "Ура!!!",
@@ -123,17 +129,20 @@ namespace Trx
                         MessageBoxIcon.Information,
                         MessageBoxDefaultButton.Button1,
                         MessageBoxOptions.DefaultDesktopOnly);
-                    
+
+
+
                     SetLabel(label7, userModel[0].first_name);
                     SetLabel(label8, userModel[0].second_name);
                     SetLabel(label9, userModel[0].last_name);
 
                     //Запрос получения приобретённых пакетов пользователем
-                    List<string> traineType = new List<string>();
-                    traineType = sqlQuery.SelectTraineTypeFromUserTraineWhereUserId(userId);
+                    List<UserTraineModel> traineType = new List<UserTraineModel>();
+                    traineType = sqlQuery.SelectAllUserTraineWhereUserId(userId);
                     for (int i = 0; i < traineType.Count; i++)
                     {
-                        SetComboBox(cbTraine, traineType[i]);
+                        if(traineType[i].count_traine != 0)
+                            SetComboBox(cbTraine, traineType[i].traine_type);
                     }
                 } else
                 {
@@ -187,10 +196,13 @@ namespace Trx
             SqlQuery sqlQuery = new SqlQuery();
             List<UserTraineModel> userTraineModel = new List<UserTraineModel>();
             userTraineModel = sqlQuery.SelectAllFromUserTraineWhereUserIdAndTraineType(userId, selectedState);
-            SetLabel(label10, userTraineModel[0].count_traine.ToString());
-            SetLabel(label11, ConvertFromUnixTimestamp(Convert.ToDouble(userTraineModel[0].date_start)).ToString());
-            SetLabel(label16, ConvertFromUnixTimestamp(Convert.ToDouble(userTraineModel[0].date_finish)).ToString());
-            SetLabel(label13, userTraineModel[0].worker_name);
+            if(userTraineModel[0].count_traine != 0)
+            {
+                SetLabel(label10, userTraineModel[0].count_traine.ToString());
+                SetLabel(label11, ConvertFromUnixTimestamp(Convert.ToDouble(userTraineModel[0].date_start)).ToString());
+                SetLabel(label16, ConvertFromUnixTimestamp(Convert.ToDouble(userTraineModel[0].date_finish)).ToString());
+                SetLabel(label13, userTraineModel[0].worker_name);
+            }
         }
 
         private void decTraine_Click(object sender, EventArgs e)
@@ -212,21 +224,26 @@ namespace Trx
 
         private void btnAdd_click(object sender, EventArgs e)
         {
-            UserModel user = new UserModel
-            {
-                Id = Convert.ToInt32(userId),
-                first_name = textBox1.Text,
-                second_name = textBox2.Text,
-                last_name = textBox3.Text
-            };
-            //Добавляем нового пользователя
             SqlQuery sqlQuery = new SqlQuery();
-            int result = sqlQuery.InsertIntoUser(user);
+            List<UserModel> userModel = sqlQuery.SelectAllFromUserWhereUserId(userId);
+            int result = 1;
+            if (userModel.Count == 0)
+            {
+                //Добавляем нового пользователя
+                UserModel user = new UserModel
+                {
+                    Id = Convert.ToInt32(userId),
+                    first_name = textBox1.Text,
+                    second_name = textBox2.Text,
+                    last_name = textBox3.Text
+                };
+                result = sqlQuery.InsertIntoUser(user);
+            }
             int maxUserTraine = sqlQuery.SelectMaxIdFromUserTraine();
             double date_finish;
-            if(SearchRegex(cbTraine2.SelectedItem.ToString(), "разовая"))
+            if (SearchRegex(cbTraine2.SelectedItem.ToString(), "разовая"))
                 date_finish = ConvertToUnixTimestamp(DateTime.Today) + 86400;
-            else if(SearchRegex(cbTraine2.SelectedItem.ToString(), "2 недели"))
+            else if (SearchRegex(cbTraine2.SelectedItem.ToString(), "2 недели"))
                 date_finish = ConvertToUnixTimestamp(DateTime.Today) + 1209600;
             else
                 date_finish = ConvertToUnixTimestamp(DateTime.Today) + 2629743;
@@ -263,6 +280,30 @@ namespace Trx
                 MessageBoxDefaultButton.Button1,
                 MessageBoxOptions.DefaultDesktopOnly);
             }
+        }
+
+        private void btnAdd_click1(object sender, EventArgs e)
+        {
+            SqlQuery sqlQuery = new SqlQuery();
+            this.Invoke(new EventHandler(delegate { btnAdd.Enabled = true; }));
+            EnabledWidget(true);
+            List<TraineModel> traine = new List<TraineModel>();
+            traine = sqlQuery.SelectAllFromTraineRightJoinOnTraineTypeCountTraineUserId(userId);
+            for (int i = 0; i < traine.Count; i++)
+            {
+                SetComboBox(cbTraine2, traine[i].type);
+            }
+
+            List<WorkerModel> worker = new List<WorkerModel>();
+            worker = sqlQuery.SelectAllFromWorker();
+            for (int i = 0; i < worker.Count; i++)
+            {
+                SetComboBox(cbWorker, worker[i].second_name);
+            }
+            List<UserModel> userModel = sqlQuery.SelectAllFromUserWhereUserId(userId);
+            textBox1.Text = userModel[0].first_name;
+            textBox2.Text = userModel[0].second_name;
+            textBox3.Text = userModel[0].last_name;
         }
 
         private void EnabledWidget(bool flag)

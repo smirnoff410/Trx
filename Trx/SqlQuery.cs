@@ -72,6 +72,42 @@ namespace Trx
             return traineType;
         }
 
+        public List<UserTraineModel> SelectAllUserTraineWhereUserId(string userId)
+        {
+            List<UserTraineModel> userTraineModel = new List<UserTraineModel>();
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [UserTraine] WHERE id_user = " + userId + "", sqlConnection);
+            using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
+            {
+                while (dr.Read())
+                {
+                    UserTraineModel userTraine = new UserTraineModel
+                    {
+                        Id = Convert.ToInt32(dr.GetValue(0)),
+                        id_user = Convert.ToInt32(dr.GetValue(1)),
+                        traine_type = dr.GetValue(2).ToString().Trim(),
+                        worker_name = dr.GetValue(3).ToString().Trim(),
+                        count_traine = Convert.ToInt32(dr.GetValue(4)),
+                        date_start = Convert.ToDecimal(dr.GetValue(5).ToString().Trim()),
+                        date_finish = Convert.ToDecimal(dr.GetValue(6).ToString().Trim())
+                    };
+                    userTraineModel.Add(userTraine);
+                }
+            }
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return userTraineModel;
+        }
+
         public List<UserTraineModel> SelectAllFromUserTraineWhereUserIdAndTraineType(string userId, string traine_type)
         {
             List<UserTraineModel> userTraineModel = new List<UserTraineModel>();
@@ -85,7 +121,7 @@ namespace Trx
 
             }
 
-            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [UserTraine] WHERE id_user = " + userId + " AND traine_type = N'" + traine_type + "'", sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [UserTraine] WHERE id_user = " + userId + " AND traine_type = N'" + traine_type + "' AND (count_traine > 0)", sqlConnection);
             using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
             {
                 while (dr.Read())
@@ -249,12 +285,48 @@ namespace Trx
             {
                 while (dr.Read())
                 {
-                    max = Convert.ToInt32(dr.GetValue(0));
+                    var temp = dr.GetValue(0);
+                    if (temp.ToString() != "")
+                        max = Convert.ToInt32(dr.GetValue(0));
+                    else
+                        max = 0;
                 }
             }
             sqlConnection.Close();
             sqlConnection.Dispose();
             return max;
+        }
+
+        public List<TraineModel> SelectAllFromTraineRightJoinOnTraineTypeCountTraineUserId(string userId)
+        {
+            List<TraineModel> traineModel = new List<TraineModel>();
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            SqlCommand sqlCommand = new SqlCommand("SELECT Traine.Id, Traine.type, Traine.type FROM Traine RIGHT JOIN UserTraine ON Traine.type = UserTraine.traine_type AND UserTraine.count_traine > 0 AND UserTraine.id_user = " + userId + "", sqlConnection);
+            using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
+            {
+                while (dr.Read())
+                {
+                    TraineModel traine = new TraineModel
+                    {
+                        Id = Convert.ToInt32(dr.GetValue(0)),
+                        type = dr.GetValue(1).ToString().Trim(),
+                        price = Convert.ToInt32(dr.GetValue(2))
+                    };
+                    traineModel.Add(traine);
+                }
+            }
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return traineModel;
         }
     }
 }

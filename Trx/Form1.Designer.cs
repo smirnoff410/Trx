@@ -34,6 +34,9 @@
             this.lbCams = new System.Windows.Forms.ListBox();
             this.decTraine = new System.Windows.Forms.Button();
             this.gbUserData = new System.Windows.Forms.GroupBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.cbTraine2 = new System.Windows.Forms.ComboBox();
             this.cbWorker = new System.Windows.Forms.ComboBox();
@@ -62,15 +65,13 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.сохранитьКакToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сохранитьКакToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnAddPoket = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbWebCamPreview)).BeginInit();
             this.gbUserData.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -117,6 +118,7 @@
             // 
             // gbUserData
             // 
+            this.gbUserData.Controls.Add(this.btnAddPoket);
             this.gbUserData.Controls.Add(this.label17);
             this.gbUserData.Controls.Add(this.label16);
             this.gbUserData.Controls.Add(this.label15);
@@ -148,6 +150,31 @@
             this.gbUserData.TabIndex = 5;
             this.gbUserData.TabStop = false;
             this.gbUserData.Text = "Данные";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(248, 144);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(0, 13);
+            this.label17.TabIndex = 28;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(139, 144);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(0, 13);
+            this.label16.TabIndex = 27;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(10, 144);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(89, 13);
+            this.label15.TabIndex = 26;
+            this.label15.Text = "Дата окончания";
             // 
             // label14
             // 
@@ -400,31 +427,6 @@
             this.tabPage5.Text = "Сотрудника";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(10, 144);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(89, 13);
-            this.label15.TabIndex = 26;
-            this.label15.Text = "Дата окончания";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(139, 144);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(0, 13);
-            this.label16.TabIndex = 27;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(248, 144);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(0, 13);
-            this.label17.TabIndex = 28;
-            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
@@ -466,6 +468,16 @@
             this.сохранитьКакToolStripMenuItem1.Name = "сохранитьКакToolStripMenuItem1";
             this.сохранитьКакToolStripMenuItem1.Size = new System.Drawing.Size(153, 22);
             this.сохранитьКакToolStripMenuItem1.Text = "Сохранить как";
+            // 
+            // btnAddPoket
+            // 
+            this.btnAddPoket.Location = new System.Drawing.Point(11, 170);
+            this.btnAddPoket.Name = "btnAddPoket";
+            this.btnAddPoket.Size = new System.Drawing.Size(75, 23);
+            this.btnAddPoket.TabIndex = 29;
+            this.btnAddPoket.Text = "Добавить пакет";
+            this.btnAddPoket.UseVisualStyleBackColor = true;
+            this.btnAddPoket.Click += new System.EventHandler(this.btnAdd_click1);
             // 
             // Form1
             // 
@@ -536,6 +548,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem сохранитьКакToolStripMenuItem1;
+        private System.Windows.Forms.Button btnAddPoket;
     }
 }
 
