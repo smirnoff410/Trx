@@ -17,6 +17,7 @@ namespace Trx
 {
     public partial class Form1 : Form
     {
+        SqlQuery sqlQuery = new SqlQuery();
         SqlConnection sqlConnection;
         string userId;
         string stringConnection;
@@ -90,6 +91,44 @@ namespace Trx
                 }
                 lbCams.SelectedIndex = 0;
             }
+
+            //Пользователь
+            List<UserModel> users = sqlQuery.SelectAllFromUser();
+            
+            for(int i = 0; i < users.Count; i++)
+            {
+                ListViewItem lvi = new ListViewItem(users[i].Id.ToString());
+                lvi.SubItems.Add(users[i].first_name);
+                lvi.SubItems.Add(users[i].second_name);
+                lvi.SubItems.Add(users[i].last_name);
+                listView1.Items.Add(lvi);
+            }
+
+            this.Invoke(new EventHandler(delegate { textBox5.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox6.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox7.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox8.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox9.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox10.Enabled = false; }));
+
+
+            //Сотрудники
+            List<WorkerModel> workers = sqlQuery.SelectAllFromWorker();
+
+            for (int i = 0; i < workers.Count; i++)
+            {
+                ListViewItem lvi = new ListViewItem(workers[i].Id.ToString());
+                lvi.SubItems.Add(workers[i].first_name);
+                lvi.SubItems.Add(workers[i].second_name);
+                lvi.SubItems.Add(workers[i].last_name);
+                listView2.Items.Add(lvi);
+            }
+
+            this.Invoke(new EventHandler(delegate { textBox16.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox17.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox18.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox19.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox20.Enabled = false; }));
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -109,8 +148,7 @@ namespace Trx
             if(result != null)
             {
                 SetResult(result.Text);
-
-                SqlQuery sqlQuery = new SqlQuery();
+                
                 //Запрос получения пользователя по считанному Id
                 List<UserModel> userModel = new List<UserModel>();
                 userModel = sqlQuery.SelectAllFromUserWhereUserId(userId);
@@ -129,9 +167,7 @@ namespace Trx
                         MessageBoxIcon.Information,
                         MessageBoxDefaultButton.Button1,
                         MessageBoxOptions.DefaultDesktopOnly);
-
-
-
+                                        
                     SetLabel(label7, userModel[0].first_name);
                     SetLabel(label8, userModel[0].second_name);
                     SetLabel(label9, userModel[0].last_name);
@@ -192,8 +228,7 @@ namespace Trx
         private void cbTraine_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedState = cbTraine.SelectedItem.ToString();
-
-            SqlQuery sqlQuery = new SqlQuery();
+            
             List<UserTraineModel> userTraineModel = new List<UserTraineModel>();
             userTraineModel = sqlQuery.SelectAllFromUserTraineWhereUserIdAndTraineType(userId, selectedState);
             if(userTraineModel[0].count_traine != 0)
@@ -217,14 +252,12 @@ namespace Trx
             if(result == DialogResult.Yes)
             {
                 //Уменьшение количества занятий на 1
-                SqlQuery sqlQuery = new SqlQuery();
                 label10.Text = sqlQuery.UpdateUserTraineSetCountTraineWhereUserIdAndTraineType(userId, cbTraine.SelectedItem.ToString(), Convert.ToInt32(label10.Text)).ToString();
             }
         }
 
         private void btnAdd_click(object sender, EventArgs e)
         {
-            SqlQuery sqlQuery = new SqlQuery();
             List<UserModel> userModel = sqlQuery.SelectAllFromUserWhereUserId(userId);
             int result = 1;
             if (userModel.Count == 0)
@@ -284,7 +317,6 @@ namespace Trx
 
         private void btnAdd_click1(object sender, EventArgs e)
         {
-            SqlQuery sqlQuery = new SqlQuery();
             this.Invoke(new EventHandler(delegate { btnAdd.Enabled = true; }));
             EnabledWidget(true);
             List<TraineModel> traine = new List<TraineModel>();
@@ -379,6 +411,200 @@ namespace Trx
                     date_finish = ConvertToUnixTimestamp(DateTime.Today) + 2629743;
                 label17.Text = ConvertFromUnixTimestamp(date_finish).ToString();
             }
+        }
+        
+        ////////////////////////////////////////////////////////////////////////////// Пользователи ////////////////////////////////////////////////////////////////////////
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            List<UserModel> users = sqlQuery.SelectAllFromUser();
+            listView1.Items.Clear();
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                ListViewItem lvi = new ListViewItem(users[i].Id.ToString());
+                lvi.SubItems.Add(users[i].first_name);
+                lvi.SubItems.Add(users[i].second_name);
+                lvi.SubItems.Add(users[i].last_name);
+                listView1.Items.Add(lvi);
+            }
+        }
+
+        private void btnEdit2_Click(object sender, EventArgs e)
+        {
+            this.Invoke(new EventHandler(delegate { textBox5.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox6.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox7.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox8.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox9.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox10.Enabled = true; }));
+        }
+
+        private void listView1_DoubleClick(object sender, EventArgs e)
+        {
+            label25.Text = listView1.SelectedItems[0].SubItems[0].Text;
+            textBox5.Text = listView1.SelectedItems[0].SubItems[1].Text;
+            textBox6.Text = listView1.SelectedItems[0].SubItems[2].Text;
+            textBox7.Text = listView1.SelectedItems[0].SubItems[3].Text;
+        }
+
+        private void btnSave2_Click(object sender, EventArgs e)
+        {
+            UserModel user = new UserModel()
+            {
+                Id = Convert.ToInt32(label25.Text),
+                first_name = textBox5.Text,
+                second_name = textBox6.Text,
+                last_name = textBox7.Text
+            };
+            if(sqlQuery.UpdateUserSetAllWhereUserId(user))
+            {
+                MessageBox.Show(
+                    "Пользователь успешно изменён",
+                    "Пользователь успешно изменён",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+                this.Invoke(new EventHandler(delegate { textBox5.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox6.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox7.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox8.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox9.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox10.Enabled = false; }));
+            }
+            else
+            {
+                MessageBox.Show(
+                    "Ошибка",
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////// Сотрудники /////////////////////////////////////////////////////////////////////
+
+        private void listView2_DoubleClick(object sender, EventArgs e)
+        {
+            WorkerModel worker = sqlQuery.SelectAllFromWorkerWhereWorkerId(listView2.SelectedItems[0].SubItems[0].Text);
+            label38.Text = listView2.SelectedItems[0].SubItems[0].Text;
+            textBox16.Text = listView2.SelectedItems[0].SubItems[1].Text;
+            textBox17.Text = listView2.SelectedItems[0].SubItems[2].Text;
+            textBox18.Text = listView2.SelectedItems[0].SubItems[3].Text;
+            textBox19.Text = worker.login;
+            textBox20.Text = worker.id_role.ToString();
+        }
+
+        private void btnEdit5_Click(object sender, EventArgs e)
+        {
+            this.Invoke(new EventHandler(delegate { textBox16.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox17.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox18.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox19.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox20.Enabled = true; }));
+        }
+
+        private void btnSave5_Click(object sender, EventArgs e)
+        {
+            WorkerModel worker = new WorkerModel()
+            {
+                Id = Convert.ToInt32(label38.Text),
+                first_name = textBox16.Text,
+                second_name = textBox17.Text,
+                last_name = textBox18.Text,
+                login = textBox19.Text,
+                id_role = Convert.ToInt32(textBox20.Text)
+            };
+            if (sqlQuery.UpdateWorkerSetAllWhereWorkerId(worker))
+            {
+                MessageBox.Show(
+                    "Сотрудник успешно изменён",
+                    "Сотрудник успешно изменён",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+                this.Invoke(new EventHandler(delegate { textBox16.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox17.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox18.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox19.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox20.Enabled = false; }));
+            }
+            else
+            {
+                MessageBox.Show(
+                    "Ошибка",
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+            }
+        }
+
+        private void btnReset5_Click(object sender, EventArgs e)
+        {
+            List<WorkerModel> workers = sqlQuery.SelectAllFromWorker();
+            listView2.Items.Clear();
+
+            for (int i = 0; i < workers.Count; i++)
+            {
+                ListViewItem lvi = new ListViewItem(workers[i].Id.ToString());
+                lvi.SubItems.Add(workers[i].first_name);
+                lvi.SubItems.Add(workers[i].second_name);
+                lvi.SubItems.Add(workers[i].last_name);
+                listView2.Items.Add(lvi);
+            }
+        }
+
+        private void btnRemove5_Click(object sender, EventArgs e)
+        {
+            if(sqlQuery.DeleteWorkerWhereId(listView2.SelectedItems[0].SubItems[0].Text))
+                if(listView2.SelectedItems.Count != 0)
+                {
+                    listView2.SelectedItems[0].Remove();
+                    MessageBox.Show(
+                        "Сотрудник удалён",
+                        "Успешно!",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
+                }
+        }
+
+        private void btnAdd5_Click(object sender, EventArgs e)
+        {
+            int max = sqlQuery.SelectMaxIdFromWorker();
+            WorkerModel worker = new WorkerModel()
+            {
+                Id = ++max,
+                first_name = textBox11.Text,
+                second_name = textBox12.Text,
+                last_name = textBox13.Text,
+                login = textBox14.Text,
+                password = textBox15.Text,
+                id_role = Convert.ToInt32(textBox21.Text)
+            };
+            if(sqlQuery.InsertIntoWorker(worker))
+                MessageBox.Show(
+                        "Сотрудник добавлен",
+                        "Успешно!",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
+            else
+                MessageBox.Show(
+                        "Ошибка",
+                        "Ошибка",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
         }
     }
 }
