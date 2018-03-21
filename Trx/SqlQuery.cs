@@ -15,6 +15,39 @@ namespace Trx
         private SqlConnection sqlConnection;
 
         //SELECT
+        public WorkerModel SelectAllFromWorkerWhereWorkerLoginWorkerPassword(string login, string password)
+        {
+            try
+            {
+                WorkerModel worker = new WorkerModel();
+                sqlConnection = new SqlConnection(stringConnection);
+                sqlConnection.Open();
+                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [Worker] Where login = N'" + login + "' AND password = N'" + password + "'", sqlConnection);
+                using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
+                {
+                    while (dr.Read())
+                    {
+                        worker = new WorkerModel
+                        {
+                            Id = Convert.ToInt32(dr.GetValue(0)),
+                            first_name = dr.GetValue(1).ToString().Trim(),
+                            second_name = dr.GetValue(2).ToString().Trim(),
+                            last_name = dr.GetValue(3).ToString().Trim(),
+                            login = dr.GetValue(4).ToString().Trim(),
+                            password = dr.GetValue(5).ToString().Trim(),
+                            id_role = Convert.ToInt32(dr.GetValue(6))
+                        };
+                    }
+                }
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+                return worker;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
         public List<UserModel> SelectAllFromUser()
         {
@@ -211,6 +244,40 @@ namespace Trx
             return traineModel;
         }
 
+        public List<ScheduleModel> SelectAllFromSchedule()
+        {
+            List<ScheduleModel> scheduleModel = new List<ScheduleModel>();
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [Schedule]", sqlConnection);
+            using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
+            {
+                while (dr.Read())
+                {
+                    ScheduleModel schedule = new ScheduleModel
+                    {
+                        Id = Convert.ToInt32(dr.GetValue(0)),
+                        worker = dr.GetValue(1).ToString().Trim(),
+                        traine = dr.GetValue(2).ToString().Trim(),
+                        date_start = Convert.ToDecimal(dr.GetValue(3).ToString().Trim()),
+                        date_end = Convert.ToDecimal(dr.GetValue(4).ToString().Trim())
+                    };
+                    scheduleModel.Add(schedule);
+                }
+            }
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return scheduleModel;
+        }
+
         public List<WorkerModel> SelectAllFromWorker()
         {
             List<WorkerModel> workerModel = new List<WorkerModel>();
@@ -365,6 +432,35 @@ namespace Trx
             return max;
         }
 
+        public int SelectMaxIdFromSchedule()
+        {
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            int max = 0;
+            SqlCommand sqlCommand = new SqlCommand("SELECT MAX(Id) FROM [Schedule]", sqlConnection);
+            using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
+            {
+                while (dr.Read())
+                {
+                    var temp = dr.GetValue(0);
+                    if (temp.ToString() != "")
+                        max = Convert.ToInt32(dr.GetValue(0));
+                    else
+                        max = 0;
+                }
+            }
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return max;
+        }
+
         public List<TraineModel> SelectAllFromTraineRightJoinOnTraineTypeCountTraineUserId(string userId)
         {
             List<TraineModel> traineModel = new List<TraineModel>();
@@ -433,6 +529,24 @@ namespace Trx
             sqlConnection.Close();
             sqlConnection.Dispose();
             return true;
+        }
+
+        public bool UpdateScheduleSetAllWhereWorkerId(ScheduleModel schedule)
+        {
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+                SqlCommand sqlCommand = new SqlCommand("UPDATE [Schedule] SET worker = N'" + schedule.worker + "', traine = N'" + schedule.traine + "', date_start = " + schedule.date_start + ", date_end = " + schedule.date_end + " WHERE Id = " + schedule.Id + "", sqlConnection);
+                int rowCount = sqlCommand.ExecuteNonQuery();
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public int UpdateUserTraineSetCountTraineWhereUserIdAndTraineType(string userId, string traine_type, int dec)
@@ -512,6 +626,31 @@ namespace Trx
                 sqlConnection.Dispose();
             }
             catch(Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool InsertIntoSchedule(ScheduleModel schedule)
+        {
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            try
+            {
+                SqlCommand sqlCommand = new SqlCommand("INSERT INTO [Schedule] VALUES(" + schedule.Id + ", N'" + schedule.worker + "', N'" + schedule.traine + "', " + schedule.date_start + ", " + schedule.date_end + ")", sqlConnection);
+                int rowCount = sqlCommand.ExecuteNonQuery();
+                sqlConnection.Close();
+                sqlConnection.Dispose();
+            }
+            catch (Exception ex)
             {
                 return false;
             }

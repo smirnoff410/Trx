@@ -18,9 +18,7 @@ namespace Trx
     public partial class Form1 : Form
     {
         SqlQuery sqlQuery = new SqlQuery();
-        SqlConnection sqlConnection;
         string userId;
-        string stringConnection;
 
         private FilterInfoCollection videoDevices;
         private VideoCaptureDevice videoSource;
@@ -31,9 +29,11 @@ namespace Trx
         delegate void SetTextBoxDelegate(TextBox textBox, String parameter);
         delegate void SetComboBoxDelegate(ComboBox comboBox, String parameter);
 
-        public Form1()
+        public Form1(int Id)
         {
             InitializeComponent();
+            WorkerModel worker = sqlQuery.SelectAllFromWorkerWhereWorkerId(Id.ToString());
+            Text = "TRX Studio - Администрирование. Добро пожаловать, " + worker.first_name + " " + worker.second_name + "!";
         }
 
         void SetResult(string result)
@@ -110,6 +110,37 @@ namespace Trx
             this.Invoke(new EventHandler(delegate { textBox8.Enabled = false; }));
             this.Invoke(new EventHandler(delegate { textBox9.Enabled = false; }));
             this.Invoke(new EventHandler(delegate { textBox10.Enabled = false; }));
+
+
+            //Расписание
+            List<ScheduleModel> schedule = sqlQuery.SelectAllFromSchedule();
+
+            for(int i = 0; i < schedule.Count; i++)
+            {
+                ListViewItem lvi = new ListViewItem(schedule[i].Id.ToString());
+                lvi.SubItems.Add(schedule[i].worker);
+                lvi.SubItems.Add(schedule[i].traine);
+                lvi.SubItems.Add(ConvertFromUnixTimestamp(Convert.ToDouble(schedule[i].date_start)).ToString());
+                lvi.SubItems.Add(ConvertFromUnixTimestamp(Convert.ToDouble(schedule[i].date_end)).ToString());
+                listView3.Items.Add(lvi);
+            }
+
+            List<WorkerModel> worker = sqlQuery.SelectAllFromWorker();
+            for(int i = 0; i < worker.Count; i++)
+            {
+                SetComboBox(comboBox1, worker[i].second_name);
+            }
+            List<TraineModel> traine = sqlQuery.SelectAllFromTraine();
+            for (int i = 0; i < traine.Count; i++)
+            {
+                if (!SearchRegex(traine[i].type, "разовая") && !SearchRegex(traine[i].type, "2 недели"))
+                    SetComboBox(comboBox2, traine[i].type);
+            }
+
+            this.Invoke(new EventHandler(delegate { comboBox3.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { comboBox4.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox24.Enabled = false; }));
+            this.Invoke(new EventHandler(delegate { textBox25.Enabled = false; }));
 
 
             //Сотрудники
@@ -605,6 +636,124 @@ namespace Trx
                         MessageBoxIcon.Information,
                         MessageBoxDefaultButton.Button1,
                         MessageBoxOptions.DefaultDesktopOnly);
+        }
+        
+        ///////////////////////////////////////////////////////////////////////Расписание////////////////////////////////////////////////////////////////////////
+
+        private void btnAdd4_Click(object sender, EventArgs e)
+        {
+            int max = sqlQuery.SelectMaxIdFromSchedule();
+            ScheduleModel schedule = new ScheduleModel()
+            {
+                Id = ++max,
+                worker = comboBox1.SelectedItem.ToString(),
+                traine = comboBox2.SelectedItem.ToString(),
+                date_start = Convert.ToDecimal(ConvertToUnixTimestamp(Convert.ToDateTime(textBox22.Text))),
+                date_end = Convert.ToDecimal(ConvertToUnixTimestamp(Convert.ToDateTime(textBox23.Text)))
+            };
+            if (sqlQuery.InsertIntoSchedule(schedule))
+                MessageBox.Show(
+                        "Тренировка добавлена",
+                        "Успешно!",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
+            else
+                MessageBox.Show(
+                        "Ошибка",
+                        "Ошибка",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information,
+                        MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
+        }
+
+        private void btnReset4_Click(object sender, EventArgs e)
+        {
+            List<ScheduleModel> schedule = sqlQuery.SelectAllFromSchedule();
+            listView3.Items.Clear();
+
+            for (int i = 0; i < schedule.Count; i++)
+            {
+                ListViewItem lvi = new ListViewItem(schedule[i].Id.ToString());
+                lvi.SubItems.Add(schedule[i].worker);
+                lvi.SubItems.Add(schedule[i].traine);
+                lvi.SubItems.Add(ConvertFromUnixTimestamp(Convert.ToDouble(schedule[i].date_start)).ToString());
+                lvi.SubItems.Add(ConvertFromUnixTimestamp(Convert.ToDouble(schedule[i].date_end)).ToString());
+                listView3.Items.Add(lvi);
+            }
+        }
+
+        private void btnEdit4_Click(object sender, EventArgs e)
+        {
+            this.Invoke(new EventHandler(delegate { comboBox3.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { comboBox4.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox24.Enabled = true; }));
+            this.Invoke(new EventHandler(delegate { textBox25.Enabled = true; }));
+
+            List<WorkerModel> worker = sqlQuery.SelectAllFromWorker();
+            for (int i = 0; i < worker.Count; i++)
+            {
+                SetComboBox(comboBox3, worker[i].second_name);
+            }
+            List<TraineModel> traine = sqlQuery.SelectAllFromTraine();
+            for (int i = 0; i < traine.Count; i++)
+            {
+                if (!SearchRegex(traine[i].type, "разовая") && !SearchRegex(traine[i].type, "2 недели"))
+                    SetComboBox(comboBox4, traine[i].type);
+            }
+        }
+
+        private void btnSave4_Click(object sender, EventArgs e)
+        {
+            ScheduleModel schedule = new ScheduleModel()
+            {
+                Id = Convert.ToInt32(label48.Text),
+                worker = comboBox3.SelectedItem.ToString(),
+                traine = comboBox4.SelectedItem.ToString(),
+                date_start = Convert.ToDecimal(ConvertToUnixTimestamp(Convert.ToDateTime(textBox24.Text))),
+                date_end = Convert.ToDecimal(ConvertToUnixTimestamp(Convert.ToDateTime(textBox25.Text)))
+            };
+            if (sqlQuery.UpdateScheduleSetAllWhereWorkerId(schedule))
+            {
+                MessageBox.Show(
+                    "Тренировка успешно изменёна",
+                    "Тренировка успешно изменёна",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+
+                this.Invoke(new EventHandler(delegate { comboBox3.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { comboBox4.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox24.Enabled = false; }));
+                this.Invoke(new EventHandler(delegate { textBox25.Enabled = false; }));
+            }
+            else
+            {
+                MessageBox.Show(
+                    "Ошибка",
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+            }
+        }
+
+        private void listView3_DoubleClick(object sender, EventArgs e)
+        {
+            label48.Text = listView3.SelectedItems[0].SubItems[0].Text;
+
+            textBox24.Text = listView3.SelectedItems[0].SubItems[3].Text;
+            textBox25.Text = listView3.SelectedItems[0].SubItems[4].Text;
+        }
+
+        private void LogInToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            form2.Show();
         }
     }
 }
