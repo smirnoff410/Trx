@@ -17,6 +17,8 @@ namespace Trx
         public Form2()
         {
             InitializeComponent();
+            textBox2.UseSystemPasswordChar = true;
+            Text = "TRX Studio - Форма авторизации.";
         }
 
         private void button1_Click(object sender, EventArgs e)

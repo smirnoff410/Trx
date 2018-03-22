@@ -19,6 +19,7 @@ namespace Trx
     {
         SqlQuery sqlQuery = new SqlQuery();
         string userId;
+        private WorkerModel worker;
 
         private FilterInfoCollection videoDevices;
         private VideoCaptureDevice videoSource;
@@ -32,7 +33,7 @@ namespace Trx
         public Form1(int Id)
         {
             InitializeComponent();
-            WorkerModel worker = sqlQuery.SelectAllFromWorkerWhereWorkerId(Id.ToString());
+            worker = sqlQuery.SelectAllFromWorkerWhereWorkerId(Id.ToString());
             Text = "TRX Studio - Администрирование. Добро пожаловать, " + worker.first_name + " " + worker.second_name + "!";
         }
 
@@ -754,6 +755,28 @@ namespace Trx
         {
             Form2 form2 = new Form2();
             form2.Show();
+        }
+
+        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        {
+            if(e.TabPageIndex == 2 && worker.id_role != 1)
+            {
+                tabControl1.SelectedIndex = 0;
+                MessageBox.Show(
+                        "У вас нет прав доступа к этой вкладке",
+                        "Ошибка",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error,
+                        MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.DefaultDesktopOnly);
+            }
+        }
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2();
+            form2.Show();
+            Close();
         }
     }
 }

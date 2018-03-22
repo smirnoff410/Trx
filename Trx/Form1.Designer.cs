@@ -165,7 +165,6 @@
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сохранитьКакToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.авторизацияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.войтиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выйтиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pbWebCamPreview)).BeginInit();
             this.gbUserData.SuspendLayout();
@@ -484,6 +483,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(761, 308);
             this.tabControl1.TabIndex = 6;
+            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
             // 
             // tabPage1
             // 
@@ -1422,24 +1422,17 @@
             // авторизацияToolStripMenuItem
             // 
             this.авторизацияToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.войтиToolStripMenuItem,
             this.выйтиToolStripMenuItem});
             this.авторизацияToolStripMenuItem.Name = "авторизацияToolStripMenuItem";
-            this.авторизацияToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
-            this.авторизацияToolStripMenuItem.Text = "Авторизация";
-            // 
-            // войтиToolStripMenuItem
-            // 
-            this.войтиToolStripMenuItem.Name = "войтиToolStripMenuItem";
-            this.войтиToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.войтиToolStripMenuItem.Text = "Войти";
-            this.войтиToolStripMenuItem.Click += new System.EventHandler(this.LogInToolStripMenuItem_Click);
+            this.авторизацияToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
+            this.авторизацияToolStripMenuItem.Text = "Выход";
             // 
             // выйтиToolStripMenuItem
             // 
             this.выйтиToolStripMenuItem.Name = "выйтиToolStripMenuItem";
             this.выйтиToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.выйтиToolStripMenuItem.Text = "Выйти";
+            this.выйтиToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -1450,6 +1443,8 @@
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximumSize = new System.Drawing.Size(781, 371);
+            this.MinimumSize = new System.Drawing.Size(781, 371);
             this.Name = "Form1";
             this.Text = "TRX Studio - Администрирование";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -1617,7 +1612,6 @@
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.ToolStripMenuItem авторизацияToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem войтиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem выйтиToolStripMenuItem;
     }
 }
