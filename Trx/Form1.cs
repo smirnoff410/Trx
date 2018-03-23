@@ -12,6 +12,8 @@ using AForge.Video.DirectShow;
 using System.Data.SqlClient;
 using Trx.Model;
 using System.Text.RegularExpressions;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.IO;
 
 namespace Trx
 {
@@ -35,6 +37,8 @@ namespace Trx
             InitializeComponent();
             worker = sqlQuery.SelectAllFromWorkerWhereWorkerId(Id.ToString());
             Text = "TRX Studio - Администрирование. Добро пожаловать, " + worker.first_name + " " + worker.second_name + "!";
+            if (worker.id_role != 1)
+                SaveToolStripMenuItem1.Enabled = false;
         }
 
         void SetResult(string result)
@@ -111,6 +115,20 @@ namespace Trx
             this.Invoke(new EventHandler(delegate { textBox8.Enabled = false; }));
             this.Invoke(new EventHandler(delegate { textBox9.Enabled = false; }));
             this.Invoke(new EventHandler(delegate { textBox10.Enabled = false; }));
+
+            //Статистика
+            List<WorkerModel> worker1 = sqlQuery.SelectAllFromWorker();
+
+            for (int i = 0; i < worker1.Count; i++)
+            {
+                ListViewItem lvi = new ListViewItem(worker1[i].Id.ToString());
+                lvi.SubItems.Add(worker1[i].first_name);
+                lvi.SubItems.Add(worker1[i].second_name);
+                lvi.SubItems.Add(worker1[i].last_name);
+                int countWorkerTraine = sqlQuery.SelectCountTraineFromScheduleWhereWorkerSecondNameAndDateEnd(worker1[i].second_name, Convert.ToDecimal((int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds));
+                lvi.SubItems.Add(countWorkerTraine.ToString());
+                listView4.Items.Add(lvi);
+            }
 
 
             //Расписание
@@ -777,6 +795,38 @@ namespace Trx
             Form2 form2 = new Form2();
             form2.Show();
             Close();
+        }
+
+        private void SaveToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            string file = "C:\\Users\\Vladislav\\Desktop\\test.xlsx";
+            if (File.Exists(file))
+                File.Delete(file);
+
+            Excel.Application oApp;
+            Excel.Worksheet oSheet;
+            Excel.Workbook oBook;
+
+            oApp = new Excel.Application();
+            oBook = oApp.Workbooks.Add();
+            oSheet = (Excel.Worksheet)oBook.Worksheets.get_Item(1);
+
+            int iColsCnt = 5;//количество столбцов для вывода на лист
+            string[] sData = new string[] {"#", "Имя", "Фамилия", "Отчество", "Количество тренеровок" };
+            for (int i = 1; i < listView4.Items.Count + 1; i++)
+            {
+                for (int c = 1; c < iColsCnt + 1; c++)
+                {
+                    if (i == 1)
+                        oSheet.Cells[i, c] = sData[c - 1];
+                    else
+                        oSheet.Cells[i, c] = listView4.Items[i - 1].SubItems[c - 1].Text;
+                }
+            }
+
+            oBook.SaveAs(file);
+            oBook.Close();
+            oApp.Quit();
         }
     }
 }

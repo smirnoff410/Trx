@@ -23,3 +23,5 @@ C:\Users\Vladislav\source\repos\Trx\Trx\bin\Debug\Trx.exe.config
 C:\Users\Vladislav\source\repos\Trx\Trx\bin\Debug\Trx.pdb
 C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Trx.exe
 C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Trx.pdb
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Interop.Office.dll
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Debug\Trx.csproj.ResolveComReference.cache

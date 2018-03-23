@@ -461,6 +461,31 @@ namespace Trx
             return max;
         }
 
+        public int SelectCountTraineFromScheduleWhereWorkerSecondNameAndDateEnd(string second_name, decimal date_end)
+        {
+            sqlConnection = new SqlConnection(stringConnection);
+            try
+            {
+                sqlConnection.Open();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            int count = 0;
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [Schedule] WHERE worker = N'" + second_name + "' AND date_end < " + date_end, sqlConnection);
+            using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
+            {
+                while (dr.Read())
+                {
+                    count++;
+                }
+            }
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return count;
+        }
+
         public List<TraineModel> SelectAllFromTraineRightJoinOnTraineTypeCountTraineUserId(string userId)
         {
             List<TraineModel> traineModel = new List<TraineModel>();
