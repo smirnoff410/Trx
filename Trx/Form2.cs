@@ -40,7 +40,10 @@ namespace Trx
                         MessageBoxDefaultButton.Button1,
                         MessageBoxOptions.DefaultDesktopOnly);
             }
-                
+        }
+        public void CloseApp()
+        {
+            Application.Exit();
         }
     }
 }

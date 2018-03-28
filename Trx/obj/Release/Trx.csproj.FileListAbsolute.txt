@@ -12,3 +12,7 @@ C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.csproj.GenerateResource.
 C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.csproj.CoreCompileInputs.cache
 C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.exe
 C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.pdb
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Interop.Office.dll
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.csproj.ResolveComReference.cache
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.Form2.resources
+C:\Users\Vladislav\source\repos\Trx\Trx\obj\Release\Trx.csprojResolveAssemblyReference.cache

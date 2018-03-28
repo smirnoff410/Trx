@@ -88,6 +88,13 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.listView4 = new System.Windows.Forms.ListView();
+            this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader18 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader19 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.btnReset4 = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -166,13 +173,6 @@
             this.SaveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.авторизацияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.выйтиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listView4 = new System.Windows.Forms.ListView();
-            this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader18 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader19 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.pbWebCamPreview)).BeginInit();
             this.gbUserData.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -737,6 +737,54 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Статистика";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // listView4
+            // 
+            this.listView4.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader14,
+            this.columnHeader15,
+            this.columnHeader16,
+            this.columnHeader17,
+            this.columnHeader18,
+            this.columnHeader19});
+            this.listView4.FullRowSelect = true;
+            this.listView4.GridLines = true;
+            this.listView4.Location = new System.Drawing.Point(6, 6);
+            this.listView4.Name = "listView4";
+            this.listView4.Size = new System.Drawing.Size(739, 160);
+            this.listView4.TabIndex = 0;
+            this.listView4.UseCompatibleStateImageBehavior = false;
+            this.listView4.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader14
+            // 
+            this.columnHeader14.Text = "#";
+            this.columnHeader14.Width = 30;
+            // 
+            // columnHeader15
+            // 
+            this.columnHeader15.Text = "Имя";
+            this.columnHeader15.Width = 71;
+            // 
+            // columnHeader16
+            // 
+            this.columnHeader16.Text = "Фамилия";
+            this.columnHeader16.Width = 87;
+            // 
+            // columnHeader17
+            // 
+            this.columnHeader17.Text = "Отчество";
+            this.columnHeader17.Width = 81;
+            // 
+            // columnHeader18
+            // 
+            this.columnHeader18.Text = "Проведённых занятий";
+            this.columnHeader18.Width = 129;
+            // 
+            // columnHeader19
+            // 
+            this.columnHeader19.Text = "Разовые занятия";
+            this.columnHeader19.Width = 103;
             // 
             // tabPage4
             // 
@@ -1423,8 +1471,8 @@
             // SaveToolStripMenuItem1
             // 
             this.SaveToolStripMenuItem1.Name = "SaveToolStripMenuItem1";
-            this.SaveToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.SaveToolStripMenuItem1.Text = "Сохранить";
+            this.SaveToolStripMenuItem1.Size = new System.Drawing.Size(153, 22);
+            this.SaveToolStripMenuItem1.Text = "Сохранить как";
             this.SaveToolStripMenuItem1.Click += new System.EventHandler(this.SaveToolStripMenuItem1_Click);
             // 
             // авторизацияToolStripMenuItem
@@ -1441,54 +1489,6 @@
             this.выйтиToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.выйтиToolStripMenuItem.Text = "Выйти";
             this.выйтиToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
-            // 
-            // listView4
-            // 
-            this.listView4.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader14,
-            this.columnHeader15,
-            this.columnHeader16,
-            this.columnHeader17,
-            this.columnHeader18,
-            this.columnHeader19});
-            this.listView4.FullRowSelect = true;
-            this.listView4.GridLines = true;
-            this.listView4.Location = new System.Drawing.Point(6, 6);
-            this.listView4.Name = "listView4";
-            this.listView4.Size = new System.Drawing.Size(739, 160);
-            this.listView4.TabIndex = 0;
-            this.listView4.UseCompatibleStateImageBehavior = false;
-            this.listView4.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader14
-            // 
-            this.columnHeader14.Text = "#";
-            this.columnHeader14.Width = 30;
-            // 
-            // columnHeader15
-            // 
-            this.columnHeader15.Text = "Имя";
-            this.columnHeader15.Width = 71;
-            // 
-            // columnHeader16
-            // 
-            this.columnHeader16.Text = "Фамилия";
-            this.columnHeader16.Width = 87;
-            // 
-            // columnHeader17
-            // 
-            this.columnHeader17.Text = "Отчество";
-            this.columnHeader17.Width = 81;
-            // 
-            // columnHeader18
-            // 
-            this.columnHeader18.Text = "Проведённых занятий";
-            this.columnHeader18.Width = 129;
-            // 
-            // columnHeader19
-            // 
-            this.columnHeader19.Text = "Разовые занятия";
-            this.columnHeader19.Width = 103;
             // 
             // Form1
             // 

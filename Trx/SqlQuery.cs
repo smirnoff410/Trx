@@ -17,36 +17,37 @@ namespace Trx
         //SELECT
         public WorkerModel SelectAllFromWorkerWhereWorkerLoginWorkerPassword(string login, string password)
         {
+            WorkerModel worker = new WorkerModel();
+            sqlConnection = new SqlConnection(stringConnection);
             try
             {
-                WorkerModel worker = new WorkerModel();
-                sqlConnection = new SqlConnection(stringConnection);
                 sqlConnection.Open();
-                SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [Worker] Where login = N'" + login + "' AND password = N'" + password + "'", sqlConnection);
-                using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
-                {
-                    while (dr.Read())
-                    {
-                        worker = new WorkerModel
-                        {
-                            Id = Convert.ToInt32(dr.GetValue(0)),
-                            first_name = dr.GetValue(1).ToString().Trim(),
-                            second_name = dr.GetValue(2).ToString().Trim(),
-                            last_name = dr.GetValue(3).ToString().Trim(),
-                            login = dr.GetValue(4).ToString().Trim(),
-                            password = dr.GetValue(5).ToString().Trim(),
-                            id_role = Convert.ToInt32(dr.GetValue(6))
-                        };
-                    }
-                }
-                sqlConnection.Close();
-                sqlConnection.Dispose();
-                return worker;
+               
             }
             catch (Exception ex)
             {
                 return null;
             }
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM [Worker] Where login = N'" + login + "' AND password = N'" + password + "'", sqlConnection);
+            using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
+            {
+                while (dr.Read())
+                {
+                    worker = new WorkerModel
+                    {
+                        Id = Convert.ToInt32(dr.GetValue(0)),
+                        first_name = dr.GetValue(1).ToString().Trim(),
+                        second_name = dr.GetValue(2).ToString().Trim(),
+                        last_name = dr.GetValue(3).ToString().Trim(),
+                        login = dr.GetValue(4).ToString().Trim(),
+                        password = dr.GetValue(5).ToString().Trim(),
+                        id_role = Convert.ToInt32(dr.GetValue(6))
+                    };
+                }
+            }
+            sqlConnection.Close();
+            sqlConnection.Dispose();
+            return worker;
         }
 
         public List<UserModel> SelectAllFromUser()
@@ -486,9 +487,8 @@ namespace Trx
             return count;
         }
 
-        public List<TraineModel> SelectAllFromTraineRightJoinOnTraineTypeCountTraineUserId(string userId)
+        public bool SelectAllFromTraineWhereUserIdAndTraineType(string userId, string traine_type)
         {
-            List<TraineModel> traineModel = new List<TraineModel>();
             sqlConnection = new SqlConnection(stringConnection);
             try
             {
@@ -499,23 +499,19 @@ namespace Trx
 
             }
 
-            SqlCommand sqlCommand = new SqlCommand("SELECT Traine.Id, Traine.type, Traine.type FROM Traine RIGHT JOIN UserTraine ON Traine.type = UserTraine.traine_type AND UserTraine.count_traine > 0 AND UserTraine.id_user = " + userId + "", sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand("SELECT * FROM UserTraine WHERE id_user = " + userId + " AND traine_type = N'" + traine_type + "'", sqlConnection);
             using (SqlDataReader dr = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection))
             {
                 while (dr.Read())
                 {
-                    TraineModel traine = new TraineModel
-                    {
-                        Id = Convert.ToInt32(dr.GetValue(0)),
-                        type = dr.GetValue(1).ToString().Trim(),
-                        price = Convert.ToInt32(dr.GetValue(2))
-                    };
-                    traineModel.Add(traine);
+                    sqlConnection.Close();
+                    sqlConnection.Dispose();
+                    return true;
                 }
             }
             sqlConnection.Close();
             sqlConnection.Dispose();
-            return traineModel;
+            return false;
         }
 
         //UPDATE

@@ -273,6 +273,8 @@ namespace Trx
                 videoSource.SignalToStop();
                 videoSource.WaitForStop();
             }
+            Form2 form2 = new Form2();
+            form2.CloseApp();
         }
 
         private void cbTraine_SelectedIndexChanged(object sender, EventArgs e)
@@ -308,61 +310,75 @@ namespace Trx
 
         private void btnAdd_click(object sender, EventArgs e)
         {
-            List<UserModel> userModel = sqlQuery.SelectAllFromUserWhereUserId(userId);
-            int result = 1;
-            if (userModel.Count == 0)
+            if (sqlQuery.SelectAllFromTraineWhereUserIdAndTraineType(userId, cbTraine2.SelectedItem.ToString()))
             {
-                //Добавляем нового пользователя
-                UserModel user = new UserModel
+                MessageBox.Show(
+                "У пользователя уже приобретён пакет. Выберите другой.",
+                "Предупреждение",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button1,
+                MessageBoxOptions.DefaultDesktopOnly);
+            }
+            else
+            {
+                List<UserModel> userModel = sqlQuery.SelectAllFromUserWhereUserId(userId);
+                int result = 1;
+                if (userModel.Count == 0)
                 {
-                    Id = Convert.ToInt32(userId),
-                    first_name = textBox1.Text,
-                    second_name = textBox2.Text,
-                    last_name = textBox3.Text
+                    //Добавляем нового пользователя
+                    UserModel user = new UserModel
+                    {
+                        Id = Convert.ToInt32(userId),
+                        first_name = textBox1.Text,
+                        second_name = textBox2.Text,
+                        last_name = textBox3.Text
+                    };
+                    result = sqlQuery.InsertIntoUser(user);
+                }
+                int maxUserTraine = sqlQuery.SelectMaxIdFromUserTraine();
+                double date_finish;
+                if (SearchRegex(cbTraine2.SelectedItem.ToString(), "разовая"))
+                    date_finish = ConvertToUnixTimestamp(DateTime.Today) + 86400;
+                else if (SearchRegex(cbTraine2.SelectedItem.ToString(), "2 недели"))
+                    date_finish = ConvertToUnixTimestamp(DateTime.Today) + 1209600;
+                else
+                    date_finish = ConvertToUnixTimestamp(DateTime.Today) + 2629743;
+                UserTraineModel userTraineModel = new UserTraineModel
+                {
+                    Id = ++maxUserTraine,
+                    id_user = Convert.ToInt32(userId),
+                    traine_type = cbTraine2.SelectedItem.ToString(),
+                    count_traine = Convert.ToInt32(textBox4.Text),
+                    worker_name = cbWorker.SelectedItem.ToString(),
+                    date_start = Convert.ToDecimal(ConvertToUnixTimestamp(DateTime.Today)),
+                    date_finish = Convert.ToDecimal(date_finish)
                 };
-                result = sqlQuery.InsertIntoUser(user);
-            }
-            int maxUserTraine = sqlQuery.SelectMaxIdFromUserTraine();
-            double date_finish;
-            if (SearchRegex(cbTraine2.SelectedItem.ToString(), "разовая"))
-                date_finish = ConvertToUnixTimestamp(DateTime.Today) + 86400;
-            else if (SearchRegex(cbTraine2.SelectedItem.ToString(), "2 недели"))
-                date_finish = ConvertToUnixTimestamp(DateTime.Today) + 1209600;
-            else
-                date_finish = ConvertToUnixTimestamp(DateTime.Today) + 2629743;
-            UserTraineModel userTraineModel = new UserTraineModel
-            {
-                Id = ++maxUserTraine,
-                id_user = Convert.ToInt32(userId),
-                traine_type = cbTraine2.SelectedItem.ToString(),
-                count_traine = Convert.ToInt32(textBox4.Text),
-                worker_name = cbWorker.SelectedItem.ToString(),
-                date_start = Convert.ToDecimal(ConvertToUnixTimestamp(DateTime.Today)),
-                date_finish = Convert.ToDecimal(date_finish)
-            };
-            int result1 = sqlQuery.InsertIntoUserTraine(userTraineModel);
-            if (result == 1 && result1 == 1)
-            {
-                MessageBox.Show(
-                "Пользователь успешно создан",
-                "Пользователь успешно создан",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information,
-                MessageBoxDefaultButton.Button1,
-                MessageBoxOptions.DefaultDesktopOnly);
+                int result1 = sqlQuery.InsertIntoUserTraine(userTraineModel);
+                if (result == 1 && result1 == 1)
+                {
+                    MessageBox.Show(
+                    "Пользователь успешно создан",
+                    "Пользователь успешно создан",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
 
-                EnabledWidget(false);
+                    EnabledWidget(false);
+                }
+                else
+                {
+                    MessageBox.Show(
+                    "Пользователь не создан",
+                    "Ошибка",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.DefaultDesktopOnly);
+                }
             }
-            else
-            {
-                MessageBox.Show(
-                "Пользователь не создан",
-                "Ошибка",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error,
-                MessageBoxDefaultButton.Button1,
-                MessageBoxOptions.DefaultDesktopOnly);
-            }
+            
         }
 
         private void btnAdd_click1(object sender, EventArgs e)
@@ -370,7 +386,7 @@ namespace Trx
             this.Invoke(new EventHandler(delegate { btnAdd.Enabled = true; }));
             EnabledWidget(true);
             List<TraineModel> traine = new List<TraineModel>();
-            traine = sqlQuery.SelectAllFromTraineRightJoinOnTraineTypeCountTraineUserId(userId);
+            traine = sqlQuery.SelectAllFromTraine();
             for (int i = 0; i < traine.Count; i++)
             {
                 SetComboBox(cbTraine2, traine[i].type);
@@ -799,34 +815,40 @@ namespace Trx
 
         private void SaveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            string file = "C:\\Users\\Vladislav\\Desktop\\test.xlsx";
-            if (File.Exists(file))
-                File.Delete(file);
-
-            Excel.Application oApp;
-            Excel.Worksheet oSheet;
-            Excel.Workbook oBook;
-
-            oApp = new Excel.Application();
-            oBook = oApp.Workbooks.Add();
-            oSheet = (Excel.Worksheet)oBook.Worksheets.get_Item(1);
-
-            int iColsCnt = 5;//количество столбцов для вывода на лист
-            string[] sData = new string[] {"#", "Имя", "Фамилия", "Отчество", "Количество тренеровок" };
-            for (int i = 1; i < listView4.Items.Count + 1; i++)
+            using (SaveFileDialog dialog = new SaveFileDialog())
             {
-                for (int c = 1; c < iColsCnt + 1; c++)
+                dialog.Filter = "xlsx files (*.xlsx)|*.xlsx";
+                dialog.FilterIndex = 2;
+                dialog.RestoreDirectory = true;
+
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (i == 1)
-                        oSheet.Cells[i, c] = sData[c - 1];
-                    else
-                        oSheet.Cells[i, c] = listView4.Items[i - 1].SubItems[c - 1].Text;
+                    string file = dialog.FileName;
+                    if (File.Exists(file))
+                        File.Delete(file);
+                    // Save data
+                    Excel.Application oApp = new Excel.Application();
+                    Excel.Workbook oBook = oApp.Workbooks.Add();
+                    Excel.Worksheet oSheet = (Excel.Worksheet)oBook.Worksheets.get_Item(1);
+
+                    int iColsCnt = 5;//количество столбцов для вывода на лист
+                    string[] sData = new string[] { "#", "Имя", "Фамилия", "Отчество", "Количество тренеровок" };
+                    for (int i = 0; i < listView4.Items.Count + 1; i++)
+                    {
+                        for (int c = 0; c < iColsCnt; c++)
+                        {
+                            if (i == 0)
+                                oSheet.Cells[i + 1, c + 1] = sData[c];
+                            else
+                                oSheet.Cells[i + 1, c + 1] = listView4.Items[i - 1].SubItems[c].Text;
+                        }
+                    }
+
+                    oBook.SaveAs(file);
+                    oBook.Close();
+                    oApp.Quit();
                 }
             }
-
-            oBook.SaveAs(file);
-            oBook.Close();
-            oApp.Quit();
         }
     }
 }
