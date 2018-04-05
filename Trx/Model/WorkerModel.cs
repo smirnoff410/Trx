@@ -15,5 +15,10 @@ namespace Trx.Model
         public string login { get; set; }
         public string password { get; set; }
         public int id_role { get; set; }
+        public decimal date_of_birth { get; set; }
+        public string phone { get; set; }
+        public string education { get; set; }
+        public string special_course { get; set; }
+        public decimal date_start { get; set; }
     }
 }

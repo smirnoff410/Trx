@@ -23,8 +23,13 @@ namespace Trx
 
         private void button1_Click(object sender, EventArgs e)
         {
+            logIn();
+        }
+
+        private void logIn()
+        {
             WorkerModel worker = sqlQuery.SelectAllFromWorkerWhereWorkerLoginWorkerPassword(textBox1.Text, textBox2.Text);
-            if (worker.first_name != null)
+            if (worker != null)
             {
                 Form1 form1 = new Form1(worker.Id);
                 form1.Show();
@@ -33,7 +38,7 @@ namespace Trx
             else
             {
                 MessageBox.Show(
-                        "Работник не найден",
+                        "Не верные данные",
                         "Упс...",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error,
@@ -41,9 +46,22 @@ namespace Trx
                         MessageBoxOptions.DefaultDesktopOnly);
             }
         }
+
         public void CloseApp()
         {
             Application.Exit();
+        }
+
+        private void textBox2_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                logIn();
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                logIn();
         }
     }
 }
