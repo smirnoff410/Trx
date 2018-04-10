@@ -12,7 +12,7 @@ namespace Trx.Model
         public string first_name { get; set; }
         public string second_name { get; set; }
         public string last_name { get; set; }
-        public int age { get; set; }
+        public decimal age { get; set; }
         public string phone { get; set; }
         public string email { get; set; }
     }

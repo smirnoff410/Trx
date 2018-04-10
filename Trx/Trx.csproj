@@ -89,7 +89,9 @@
     <Compile Include="Model\TraineModel.cs" />
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="Model\UserTraineModel.cs" />
+    <Compile Include="Model\UserVisitsModel.cs" />
     <Compile Include="Model\WorkerModel.cs" />
+    <Compile Include="Model\WorkerTraineModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlQuery.cs" />

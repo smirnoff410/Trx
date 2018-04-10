@@ -13,5 +13,6 @@ namespace Trx.Model
         public string traine { get; set; }
         public decimal date_start { get; set; }
         public decimal date_end { get; set; }
+        public int count_user { get; set; }
     }
 }
